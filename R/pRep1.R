@@ -26,7 +26,7 @@
 #' pRep1(24, 2, 3)
 #'
 #'@references
-#'Williams E, Piepho HP, Whitaker D (2011)<https://doi.org/10.1002/bimj.201000102>
+#'Williams E, Piepho HP, Whitaker D (2011)<doi:10.1002/bimj.201000102>
 ########################################################
 ################################################
 pRep1<-function(v,m,s){

@@ -30,11 +30,11 @@ N_matrix=function(design)
   N
 }
 N_mat=N_matrix(design)
+r=(N_mat%*%t(N_mat))[1,1]
 ###########################################################
 C_matrix=function(N_mat){
   v1=nrow(N_mat)
   b1=ncol(N_mat)
-  r=3
   K=diag(colSums(N_mat), b1, b1)
   R=diag(rowSums(N_mat), v1, v1)
   kvec=colSums(N_mat)
@@ -46,7 +46,7 @@ C_mat<-C_matrix(N_mat)
 ##########################################################
 C_Efficiency=function(C_mat){
   E=eigen(C_mat, only.values = T)
-  r=3
+
   E1=unlist(E)
   E_positive=E1[E1>=0.000000001]
   n=length(E_positive)
