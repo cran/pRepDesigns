@@ -1,8 +1,9 @@
 #' p-rep designs with unequal block sizes
 #'
-#' @param v Total number of treatments
-#' @param m Positive integer (>=1)
-#' @param s Positive integer (>=3)
+#' @param v Total number of treatments (v = 2ms*(s-1))
+#' @param m Positive integer (m>=1)
+#' @param s Positive integer (s>=3)
+#' @param randomized_layout TRUE or FALSE. By default it is FALSE.
 #'@description The first step of this function involves generating a higher
 #'associate PBIB (partially balanced incomplete block) design consisting of two
 #'sets of blocks. Subsequently, by creating various combinations of these two
@@ -18,7 +19,8 @@
 #' library(pRepDesigns)
 #' pRep4(48, 2, 4)}
 
-pRep4=function (v, m, s)
+
+pRep4=function (v, m, s,randomized_layout=FALSE)
 {
   if (m >= 1 && s >= 3 && v == 2 * m * s * (s - 1)) {
 
@@ -26,7 +28,6 @@ pRep4=function (v, m, s)
     v=2*m*s*(s-1)
     b1=2*(s-1)
     b2=2*s
-    r=2
     k1=m*s
     k2=2*m*(s-1)
 
@@ -48,7 +49,20 @@ pRep4=function (v, m, s)
     z2=matrix(0, nrow = 2 * (s - 1), ncol = k2-k1)
     mat2 = cbind(z1,z2)
     mat=rbind(mat1, mat2)
-
+    ####for randomization
+    if(randomized_layout==TRUE){
+      mat1<-mat1[sample(1:nrow(mat1),nrow(mat1)),]
+      mat2<-mat2[sample(1:nrow(mat2),nrow(mat2)),]
+      for(i in 1:nrow(mat1)){
+        mat1[i,]<-sample(mat1[i,])
+      }
+      mat22<-mat2[,1:k1]
+      for(i in 1:nrow(mat22)){
+        mat22[i,]<-sample(mat22[i,])
+      }
+      mat2[,1:k1]<-mat22
+      mat<-rbind(mat1,mat2)
+    }
     row.names(mat)=c(1:nrow(mat))
     a1=1
     while(a1<=nrow(mat)){
@@ -61,6 +75,11 @@ pRep4=function (v, m, s)
   }
 
 
+  message("PBIB Design")
+  print(mat)
+  cat("\n")
+  message("______ p-Rep designs ________")
+  cat("\n")
 
   ####################################Average var and CEF code
   CEAV=function(design){
@@ -122,27 +141,6 @@ pRep4=function (v, m, s)
     listm=list("Average Variance Factor"=Average_var,"Cannonical Efficiency Factor"=C_E)
     return(listm)
   }
-
-  message("__________ PBIB Design __________")
-  cat("\n")
-  print(mat)
-  cat("\n")
-  A11=c("Number of treatments (v)","First set of blocks (b1)",
-        "Second set of blocks (b2)","Number of replications (r)",
-        "Size of b1 blocks (k1)","Size of b2 blocks (k2)")
-  A22=c(v, b1, b2, r, k1, k2)
-  A1122 = cbind(A11, A22)
-  print("Design parameters",quote=F)
-  prmatrix(A1122, rowlab = , collab = rep("", ncol(A1122)), quote = FALSE, na.print = "")
-  cat("\n")
-  print(CEAV(mat))
-  cat("\n")
-
-
-
-  message("__________ p-Rep designs __________")
-  cat("\n")
-
   #####################################
   if(nrow(mat1)%%2!=0){
     boolean1=F
@@ -259,7 +257,7 @@ pRep4=function (v, m, s)
 
   for(i in 1:length(finallist)){
     allenv=NULL
-    message(paste("__________ p-Rep Design",i))
+    message(paste("_______p-Rep Design",i))
 
     cat("\n")
     for(j in 1:length(finallist[[i]])){
@@ -293,3 +291,5 @@ pRep4=function (v, m, s)
     print(CEAV(allenv))
   }
 }
+
+

@@ -1,8 +1,9 @@
-#' p-rep designs with unequal block sizes
+#' p-rep designs with equal block sizes
 #'
-#' @param v Total number of treatments
-#' @param m Positive integer (>=1)
-#' @param s Positive integer (>=2)
+#' @param v Total number of treatments (v = 2ms^2)
+#' @param m Positive integer (m>=1)
+#' @param s Positive integer (s>=2)
+#' @param randomized_layout TRUE or FALSE. By default it is FALSE.
 #' @description The primary purpose of this function is to generate various
 #' proper p-rep designs for multi-environmental trials.
 #'
@@ -15,11 +16,10 @@
 #' library(pRepDesigns)
 #' pRep5(64, 2, 4)
 #' }
-pRep5=function (v, m, s) {
+
+pRep5=function (v, m, s,randomized_layout=FALSE) {
   if (m >= 1 && s >= 2 && v == 2 * m * s * s) {
     v=2*m*s*s
-    b=2*s
-    k=2*m*s
 
     vv = 1
     y = c()
@@ -34,6 +34,22 @@ pRep5=function (v, m, s) {
     mat2
     mat=rbind(mat1, mat2)
     mat
+    ####for randomization
+    if(randomized_layout==TRUE){
+      mat1<-mat1[sample(1:nrow(mat1),nrow(mat1)),]
+      mat2<-mat2[sample(1:nrow(mat2),nrow(mat2)),]
+      for(i in 1:nrow(mat1)){
+        mat1[i,]<-sample(mat1[i,])
+      }
+      for(i in 1:nrow(mat2)){
+        mat2[i,]<-sample(mat2[i,])
+      }
+
+      mat<-rbind(mat1,mat2)
+    }
+
+
+
     row.names(mat)=c(1:nrow(mat))
     a1=1
     while(a1<=nrow(mat)){
@@ -44,21 +60,13 @@ pRep5=function (v, m, s) {
   else {
     message("Please enter v(=2*m*s*s, where m>=1 and s>=3)")
   }
-
-
-
-  message("__________ PBIB Design __________")
-  cat("\n")
+  message("PBIB Design")
   print(mat)
   cat("\n")
-  A11=c("Number of treatments (v)","Number of blocks (b)",
-        "Number of replications (r)", "Block size (k)")
-  A22=c(v, b, 2, k)
-  A1122 = cbind(A11, A22)
-  print("Design Parameters",quote=F)
-  prmatrix(A1122, rowlab = , collab = rep("", ncol(A1122)), quote = FALSE, na.print = "")
+  message("______ p-Rep designs ________")
   cat("\n")
 
+  ####################################
   ####################################Average var and CEF code
   CEAV=function(design){
     v=max(design)
@@ -119,12 +127,6 @@ pRep5=function (v, m, s) {
     listm=list("Average Variance Factor"=Average_var,"Cannonical Efficiency Factor"=C_E)
     return(listm)
   }
-
-  print(CEAV(mat))
-  ################################
-  cat("\n")
-  message("__________ p-Rep designs __________")
-  cat("\n")
 
   #####################################
   if(nrow(mat1)%%2!=0){
@@ -252,7 +254,7 @@ pRep5=function (v, m, s) {
 
   for(i in 1:length(finallist)){
     allenv=NULL
-    message(paste("__________ p-Rep Design",i))
+    message(paste("_______p-Rep Design",i))
 
     cat("\n")
     for(j in 1:length(finallist[[i]])){
@@ -288,3 +290,6 @@ pRep5=function (v, m, s) {
     print(CEAV(allenv))
   }
 }
+
+
+

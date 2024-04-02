@@ -4,14 +4,16 @@
 \alias{pRep4}
 \title{p-rep designs with unequal block sizes}
 \usage{
-pRep4(v, m, s)
+pRep4(v, m, s, randomized_layout = FALSE)
 }
 \arguments{
-\item{v}{Total number of treatments}
+\item{v}{Total number of treatments (v = 2ms*(s-1))}
 
-\item{m}{Positive integer (>=1)}
+\item{m}{Positive integer (m>=1)}
 
-\item{s}{Positive integer (>=3)}
+\item{s}{Positive integer (s>=3)}
+
+\item{randomized_layout}{TRUE or FALSE. By default it is FALSE.}
 }
 \value{
 This function calculates design parameters (v, b1, b2, r, k1, k2),

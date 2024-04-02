@@ -2,16 +2,18 @@
 % Please edit documentation in R/pRep5.R
 \name{pRep5}
 \alias{pRep5}
-\title{p-rep designs with unequal block sizes}
+\title{p-rep designs with equal block sizes}
 \usage{
-pRep5(v, m, s)
+pRep5(v, m, s, randomized_layout = FALSE)
 }
 \arguments{
-\item{v}{Total number of treatments}
+\item{v}{Total number of treatments (v = 2ms^2)}
 
-\item{m}{Positive integer (>=1)}
+\item{m}{Positive integer (m>=1)}
 
-\item{s}{Positive integer (>=2)}
+\item{s}{Positive integer (s>=2)}
+
+\item{randomized_layout}{TRUE or FALSE. By default it is FALSE.}
 }
 \value{
 This function calculates design parameters (v, b, r, k), average
